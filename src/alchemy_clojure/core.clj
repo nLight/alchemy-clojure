@@ -78,115 +78,47 @@
   [api-key & body]
   `(binding [*api-key* ~api-key] ~@body))
 
-; (defmacro defendpoint
-;   "Defines endpoint function"
-;   [endpoint flavor data & opts]
-;   `(let 
-;     [options# (assoc ~opts ~flavor ~data) url# (~flavor (~endpoint endpoints))]
-;     (request url# options#)))
+(defmacro defendpoint
+  "Defines endpoint function"
+  [endpointname docstring]
+  `(defn ~(symbol endpointname)
+      ~docstring
+     [flavor# data# & [options#]]
+     (let [options# (assoc options# flavor# data#) url# (flavor# (~(keyword endpointname) endpoints))]
+    (request url# options#)))
+  )
 
 (defn- request
   "HTTP request wrapper"
   [url, options]
-  (let 
+  (let
     [options (assoc options :outputMode "json" :apikey *api-key*) ]
     (json/parse-string (:body (client/post (str base-url url) {:form-params options})) true)))
 
-(defn sentiment
-  "Calculates the sentiment for text, a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:sentiment endpoints))]
-    (request url options)))
+(defendpoint sentiment "Calculates the sentiment for text, a URL or HTML.")
 
-(defn sentiment_targeted
-  "Calculates the targeted sentiment for text, a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:sentiment_targeted endpoints))]
-    (request url options)))
+(defendpoint sentiment_targeted "Calculates the targeted sentiment for text, a URL or HTML.")
 
-(defn author
-  "Extracts the author from a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:author endpoints))]
-    (request url options)))
+(defendpoint author "Extracts the author from a URL or HTML.")
 
-(defn keywords
-  "Extracts the keywords from text, a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:keywords endpoints))]
-    (request url options)))
+(defendpoint keywords "Extracts the keywords from text, a URL or HTML.")
 
-(defn concepts
-  "Tags the concepts for text, a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:concepts endpoints))]
-    (request url options)))
+(defendpoint concepts "Tags the concepts for text, a URL or HTML.")
 
-(defn entities
-  "Extracts the entities for text, a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:entities endpoints))]
-    (request url options)))
+(defendpoint entities "Extracts the entities for text, a URL or HTML.")
 
-(defn category
-  "Categorizes the text for text, a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:category endpoints))]
-    (request url options)))
+(defendpoint category "Categorizes the text for text, a URL or HTML.")
 
-(defn relations
-  "Extracts the relations for text, a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:relations endpoints))]
-    (request url options)))
+(defendpoint relations "Extracts the relations for text, a URL or HTML.")
 
-(defn language
-  "Detects the language for text, a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:language endpoints))]
-    (request url options)))
+(defendpoint language "Detects the language for text, a URL or HTML.")
 
-(defn text
-  "Extracts the cleaned text (removes ads, navigation, etc.) for text, a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:text endpoints))]
-    (request url options)))
+(defendpoint text "Extracts the cleaned text (removes ads, navigation, etc.) for text, a URL or HTML.")
 
-(defn text_raw
-  "Extracts the raw text (includes ads, navigation, etc.) for a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:text_raw endpoints))]
-    (request url options)))
+(defendpoint text_raw "Extracts the raw text (includes ads, navigation, etc.) for a URL or HTML.")
 
-(defn title
-  "Extracts the title for a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:title endpoints))]
-    (request url options)))
+(defendpoint title "Extracts the title for a URL or HTML.")
 
-(defn feeds
-  "Detects the RSS/ATOM feeds for a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:feeds endpoints))]
-    (request url options)))
+(defendpoint feeds "Detects the RSS/ATOM feeds for a URL or HTML.")
 
-(defn microformats
-  "Parses the microformats for a URL or HTML."
-  [flavor data & [options]]
-  (let 
-    [options (assoc options flavor data) url (flavor (:microformats endpoints))]
-    (request url options)))
-
+(defendpoint microformats "Parses the microformats for a URL or HTML.")
