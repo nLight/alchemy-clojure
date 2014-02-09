@@ -11,7 +11,7 @@ A SDK for AlchemyAPI using Clojure
 
 ## License
 
-Copyright © 2014 Rmitriy Rozhkov
+Copyright © 2014 Dmitriy Rozhkov
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
