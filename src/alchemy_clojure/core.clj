@@ -38,7 +38,15 @@
    :feeds {:url  "/url/URLGetFeedLinks"
            :html "/html/HTMLGetFeedLinks"}
    :microformats {:url  "/url/URLGetMicroformatData"
-                  :html "/html/HTMLGetMicroformatData"}})
+                  :html "/html/HTMLGetMicroformatData"}
+   :taxonomy {:url  "/url/URLGetRankedTaxonomy"
+              :text "/text/TextGetRankedTaxonomy"
+              :html "/html/HTMLGetRankedTaxonomy"}
+   :combined {:url  "/url/URLGetCombinedData"
+              :text "/text/TextGetCombinedData"}
+   :image_extract {:url "/url/URLGetImage"}
+   :image_tag {:url   "/url/URLGetRankedImageKeywords"
+               :image "/image/ImageGetRankedImageKeywords"}})
 
 (defonce base-url "http://access.alchemyapi.com/calls")
 
