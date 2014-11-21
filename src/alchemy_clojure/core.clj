@@ -102,3 +102,11 @@
 (defendpoint feeds "Detects the RSS/ATOM feeds for a URL or HTML.")
 
 (defendpoint microformats "Parses the microformats for a URL or HTML.")
+
+(defendpoint taxonomy "Categorizes the text for a URL, text or HTML.")
+
+(defendpoint combined "Combined call for a URL or text.")
+
+(defendpoint image_extract "Extract image from a URL.")
+
+(defendpoint image_tag "Tag image from a URL or raw image data.")
