@@ -1,6 +1,6 @@
 (ns alchemy-clojure.core
-  (:require [cheshire.core   :as json])
-  (:require [clj-http.client :as client]))
+  (:require [cheshire.core   :as json]
+            [clj-http.client :as client]))
 
 (defonce endpoints
   {:sentiment {:url  "/url/URLGetTextSentiment"
