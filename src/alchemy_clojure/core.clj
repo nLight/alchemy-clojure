@@ -1,73 +1,52 @@
 (ns alchemy-clojure.core
-  (:require [cheshire.core   :as json])
-  (:require [clj-http.client :as client]))
+  (:require [cheshire.core   :as json]
+            [clj-http.client :as client]))
 
-(defonce endpoints {
-  :sentiment {
-    :url  "/url/URLGetTextSentiment"
-    :text "/text/TextGetTextSentiment"
-    :html "/html/HTMLGetTextSentiment"  
-  }
-  :sentiment_targeted {
-    :url  "/url/URLGetTargetedSentiment"
-    :text "/text/TextGetTargetedSentiment"
-    :html "/html/HTMLGetTargetedSentiment"
-  }
-  :author {
-    :url  "/url/URLGetAuthor"
-    :html "/html/HTMLGetAuthor"
-  }
-  :keywords {
-    :url  "/url/URLGetRankedKeywords"
-    :text "/text/TextGetRankedKeywords"
-    :html "/html/HTMLGetRankedKeywords"
-  }
-  :concepts {
-    :url  "/url/URLGetRankedConcepts"
-    :text "/text/TextGetRankedConcepts"
-    :html "/html/HTMLGetRankedConcepts"
-  }
-  :entities {
-    :url  "/url/URLGetRankedNamedEntities"
-    :text "/text/TextGetRankedNamedEntities"
-    :html "/html/HTMLGetRankedNamedEntities"
-  }
-  :category {
-    :url  "/url/URLGetCategory"
-    :text "/text/TextGetCategory"
-    :html "/html/HTMLGetCategory"
-  }
-  :relations {
-    :url  "/url/URLGetRelations"
-    :text "/text/TextGetRelations"
-    :html "/html/HTMLGetRelations"
-  }
-  :language {
-    :url   "/url/URLGetLanguage"
-    :text  "/text/TextGetLanguage"
-    :html  "/html/HTMLGetLanguage"
-  }
-  :text {
-    :url  "/url/URLGetText"
-    :html "/html/HTMLGetText"
-  }
-  :text_raw {
-    :url  "/url/URLGetRawText"
-    :html "/html/HTMLGetRawText"
-  }
-  :title {
-    :url  "/url/URLGetTitle"
-    :html "/html/HTMLGetTitle"
-  }
-  :feeds {
-    :url  "/url/URLGetFeedLinks"
-    :html "/html/HTMLGetFeedLinks"
-  }
-  :microformats {
-    :url  "/url/URLGetMicroformatData"
-    :html "/html/HTMLGetMicroformatData"
-  }
-})
+(defonce endpoints
+  {:sentiment {:url  "/url/URLGetTextSentiment"
+               :text "/text/TextGetTextSentiment"
+               :html "/html/HTMLGetTextSentiment" }
+   :sentiment_targeted {:url  "/url/URLGetTargetedSentiment"
+                        :text "/text/TextGetTargetedSentiment"
+                        :html "/html/HTMLGetTargetedSentiment"}
+   :author {:url  "/url/URLGetAuthor"
+            :html "/html/HTMLGetAuthor"}
+   :keywords {:url  "/url/URLGetRankedKeywords"
+              :text "/text/TextGetRankedKeywords"
+              :html "/html/HTMLGetRankedKeywords"}
+   :concepts {:url  "/url/URLGetRankedConcepts"
+              :text "/text/TextGetRankedConcepts"
+              :html "/html/HTMLGetRankedConcepts"}
+   :entities {:url  "/url/URLGetRankedNamedEntities"
+              :text "/text/TextGetRankedNamedEntities"
+              :html "/html/HTMLGetRankedNamedEntities"}
+   :category {:url  "/url/URLGetCategory"
+              :text "/text/TextGetCategory"
+              :html "/html/HTMLGetCategory"}
+   :relations {:url  "/url/URLGetRelations"
+               :text "/text/TextGetRelations"
+               :html "/html/HTMLGetRelations"}
+   :language {:url   "/url/URLGetLanguage"
+              :text  "/text/TextGetLanguage"
+              :html  "/html/HTMLGetLanguage"}
+   :text {:url  "/url/URLGetText"
+          :html "/html/HTMLGetText"}
+   :text_raw {:url  "/url/URLGetRawText"
+              :html "/html/HTMLGetRawText"}
+   :title {:url  "/url/URLGetTitle"
+           :html "/html/HTMLGetTitle"}
+   :feeds {:url  "/url/URLGetFeedLinks"
+           :html "/html/HTMLGetFeedLinks"}
+   :microformats {:url  "/url/URLGetMicroformatData"
+                  :html "/html/HTMLGetMicroformatData"}
+   :taxonomy {:url  "/url/URLGetRankedTaxonomy"
+              :text "/text/TextGetRankedTaxonomy"
+              :html "/html/HTMLGetRankedTaxonomy"}
+   :combined {:url  "/url/URLGetCombinedData"
+              :text "/text/TextGetCombinedData"}
+   :image_extract {:url "/url/URLGetImage"}
+   :image_tag {:url   "/url/URLGetRankedImageKeywords"
+               :image "/image/ImageGetRankedImageKeywords"}})
 
 (defonce base-url "http://access.alchemyapi.com/calls")
 
@@ -85,15 +64,16 @@
       ~docstring
      [flavor# data# & [options#]]
      (let [options# (assoc options# flavor# data#) url# (flavor# (~(keyword endpointname) endpoints))]
-    (request url# options#)))
-  )
+    (request url# options#))))
 
 (defn- request
   "HTTP request wrapper"
-  [url, options]
-  (let
-    [options (assoc options :outputMode "json" :apikey *api-key*) ]
-    (json/parse-string (:body (client/post (str base-url url) {:form-params options})) true)))
+  [url options]
+  (json/parse-string (:body (client/post (str base-url url)
+                                         {:form-params (assoc options
+                                                         :outputMode "json"
+                                                         :apikey *api-key*)}))
+                     true))
 
 (defendpoint sentiment "Calculates the sentiment for text, a URL or HTML.")
 
@@ -122,3 +102,11 @@
 (defendpoint feeds "Detects the RSS/ATOM feeds for a URL or HTML.")
 
 (defendpoint microformats "Parses the microformats for a URL or HTML.")
+
+(defendpoint taxonomy "Categorizes the text for a URL, text or HTML.")
+
+(defendpoint combined "Combined call for a URL or text.")
+
+(defendpoint image_extract "Extract image from a URL.")
+
+(defendpoint image_tag "Tag image from a URL or raw image data.")
